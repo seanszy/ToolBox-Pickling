@@ -3,7 +3,8 @@
 from os.path import exists
 import sys
 from pickle import dump, load
-
+import os
+import pickle
 
 def update_counter(file_name, reset=False):
     """ Updates a counter stored in the file 'file_name'
@@ -30,11 +31,36 @@ def update_counter(file_name, reset=False):
     >>> update_counter('blah2.txt')
     2
     """
-    pass
+    does_file_exist = os.path.exists(file_name)
+    if reset == True:
+        does_file_exist = False
+    if does_file_exist == False:
+        files = open(file_name, 'wb')
+        pickle.dump(1, files)
+        files.close
+    else:
+        files = open(file_name, 'rb')
+        file_content = pickle.load(files) + 1
+        files.close
+
+        files = open(file_name, 'wb')
+        pickle.dump(file_content, files)
+        files.close
+
+        #converted_file_content = pickle.loads(file_content)
+        #converted_file_content = str(int(file_content)+1)
+        #fout.close
+        #file_dump = pickle.dumps(converted_file_content)
+        #fout = open(file_name, 'w')
+        #fout.write(str(converted_file_content))
+        #fout.close
+    files = open(file_name, 'rb')
+    prints = pickle.load(files)
+    return (prints)
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        import doctest
-        doctest.testmod()
-    else:
-        print("new value is " + str(update_counter(sys.argv[1])))
+    #if len(sys.argv) < 2:
+    import doctest
+    doctest.testmod()
+    #else:
+    #print("new value is " + str(update_counter(sys.argv[1])))
